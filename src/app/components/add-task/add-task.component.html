@@ -1,32 +1,55 @@
-<form *ngIf="showForm" class="add-form" (ngSubmit)="onSubmit()">
+<form
+  *ngIf="showForm"
+  class="add-form"
+  (ngSubmit)="onSubmit()"
+  #addForm="ngForm"
+>
   <div class="form-control">
     <label for="text">Task</label>
     <input
       type="text"
       name="text"
-      [(ngModel)]="text"
+      required
+      ngModel
+      #text="ngModel"
       id="text"
       placeholder="Add Task"
     />
+    <div>
+      <small *ngIf="text.invalid && text.touched"
+        >*Text is a Required Field</small
+      >
+    </div>
   </div>
   <div class="form-control">
     <label for="day">Day & Time</label>
     <input
       type="datetime"
       name="day"
-      [(ngModel)]="day"
+      required
+      ngModel
+      #day="ngModel"
       id="day"
       placeholder="Add Day & Time"
     />
+    <div>
+      <small *ngIf="day.invalid && day.touched">*Day is a Required Field</small>
+    </div>
   </div>
   <div class="form-control form-control-check">
     <label for="reminder">Set Reminder</label>
     <input
       type="checkbox"
       name="reminder"
-      [(ngModel)]="reminder"
+      ngModel
+      #reminder="ngModel"
       id="reminder"
     />
   </div>
-  <input type="submit" value="Save Task" class="btn btn-block" />
+  <input
+    type="submit"
+    value="Save Task"
+    class="btn btn-block"
+    [disabled]="!addForm.valid"
+  />
 </form>

@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Task } from '../../Task';
 import { UiService } from '../../services/ui.service';
 import { Subscription } from 'rxjs';
@@ -14,12 +14,10 @@ import { NgIf } from '@angular/common';
 })
 export class AddTaskComponent {
   @Output() onAddTask: EventEmitter<Task> = new EventEmitter();
-
-  text!: string;
-  day!: string;
-  reminder: boolean = false;
   showForm!: boolean;
   subscription!: Subscription;
+
+  @ViewChild('Addform') form!: NgForm;
 
   constructor(private uiService: UiService) {
     this.subscription = this.uiService
@@ -28,21 +26,21 @@ export class AddTaskComponent {
   }
 
   onSubmit() {
-    if (!this.text) {
+    console.log(this.form);
+
+    if (this.form.valid === null || !this.form.valid) {
       alert('Please add a task');
       return;
     }
 
     const newTask: Task = {
-      text: this.text,
-      day: this.day,
-      reminder: this.reminder,
+      text: this.form.value.text,
+      day: this.form.value.day,
+      reminder: this.form.value.reminder,
     };
 
     this.onAddTask.emit(newTask);
 
-    this.text = '';
-    this.day = '';
-    this.reminder = false;
+    this.form.reset();
   }
 }
